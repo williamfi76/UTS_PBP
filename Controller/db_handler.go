@@ -13,8 +13,7 @@ import (
 func connect() *sql.DB {
 	dbHost := os.Getenv("DB_HOST")
 	fmt.Println(dbHost)
-	//TODO ganti nama Database
-	db, err := sql.Open("mysql", "root:@tcp(localhost:3306)/db_latihan_pbp")
+	db, err := sql.Open("mysql", "root:@tcp(localhost:3306)/uts_pbp")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -24,8 +23,7 @@ func connect() *sql.DB {
 func connectGorm() *gorm.DB {
 	dbHost := os.Getenv("DB_HOST")
 	fmt.Println(dbHost)
-	//TODO ganti nama Database
-	db, err := gorm.Open("mysql", "root:@tcp(localhost:3306)/db_latihan_pbp")
+	db, err := gorm.Open("mysql", "root:@tcp(localhost:3306)/uts_pbp")
 	if err != nil {
 		log.Fatal(err)
 	}
