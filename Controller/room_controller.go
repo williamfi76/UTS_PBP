@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	m "uts_pbp/Model"
@@ -101,18 +102,39 @@ func InsertRoom(w http.ResponseWriter, r *http.Request) {
 	idRoom := r.FormValue("id_room")
 	idAcc := r.FormValue("id_acc")
 
-	maxPlayer, err := db.Query("SELECT g.max_player FROM rooms r INNER JOIN games g ON r.id_game = g.id INNER JOIN participants p ON p.id_room = r.id WHERE r.id = ? LIMIT 1", idRoom)
+	maxPart, err := db.Query("SELECT g.max_player FROM rooms r INNER JOIN games g ON r.id_game = g.id INNER JOIN participants p ON p.id_room = r.id WHERE r.id = ? LIMIT 1", idRoom)
 	if err != nil {
 		log.Println("Error: Cant Find MaxpLayer")
 		sendErrorResponse(w, "Tidak bisa menemukan Max Player")
 		return
 	}
-	count, err := db.Query("SELECT count(*) FROM rooms r INNER JOIN games g ON r.id_game = g.id INNER JOIN participants p ON p.id_room = r.id WHERE r.id = ?", idRoom)
+	currPart, err := db.Query("SELECT count(*) FROM rooms r INNER JOIN games g ON r.id_game = g.id INNER JOIN participants p ON p.id_room = r.id WHERE r.id = ?", idRoom)
 	if err != nil {
 		log.Println("Error parsing form data:", err)
 		http.Error(w, "Gagal mengambil Data", http.StatusInternalServerError)
 		return
 	}
+
+	var count = 0
+	var maxPlayer = 0
+
+	for currPart.Next() {
+		if err := currPart.Scan(&count); err != nil {
+			log.Println(err)
+			sendErrorResponse(w, "Gagal mengambil jumlah Partisipan saat ini")
+			return
+		}
+	}
+
+	for maxPart.Next() {
+		if err := maxPart.Scan(&maxPlayer); err != nil {
+			log.Println(err)
+			sendErrorResponse(w, "Gagal mengambil jumlah maksimal Player")
+			return
+		}
+	}
+
+	fmt.Println(count, " ", maxPlayer)
 
 	if count == maxPlayer {
 		sendErrorResponse(w, "Tidak bisa join room sudah memenuhi kapasitas")

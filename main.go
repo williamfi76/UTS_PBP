@@ -12,10 +12,6 @@ import (
 
 func main() {
 	router := mux.NewRouter()
-	// router.HandleFunc("/users", c.GetAllUsers).Methods("GET")
-	// router.HandleFunc("/users", c.InsertNewUser).Methods("POST")
-	// router.HandleFunc("/users", c.UpdateUser).Methods("PUT")
-	// router.HandleFunc("/users", c.Deleteuser).Methods("DELETE")
 
 	router.HandleFunc("/n1/rooms", c.GetAllRoomsForGame).Methods("GET")
 	router.HandleFunc("/n2/rooms", c.GetDetailRoom).Methods("GET")
@@ -23,7 +19,7 @@ func main() {
 	router.HandleFunc("/n4/rooms", c.LeaveRoom).Methods("DELETE")
 
 	http.Handle("/", router)
-	fmt.Println("Connected to Port 8888")
-	log.Println("Connected to Port 8888")
-	log.Fatal(http.ListenAndServe(":8888", router))
+	fmt.Println("Connected to Port 8880")
+	log.Println("Connected to Port 8880")
+	log.Fatal(http.ListenAndServe(":8880", router))
 }
